@@ -4,7 +4,7 @@
 
 #define OUTPUT 0
 #define INPUT 1
-#define ODC_ENABLE 1
+#define ENABLE 1
 
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
@@ -23,22 +23,26 @@ void initKeypad(void){
 	TRISBbits.TRISB11 = INPUT;	//Pin 22
 
         //Turn on Open Drain Collection for Outputs
-        ODCAbits.ODA0 = ODC_ENABLE;  //Pin 2
-        ODCAbits.ODA1 = ODC_ENABLE;  //Pin 3
-        ODCBbits.ODB2 = ODC_ENABLE;  //Pin 6
-        ODCAbits.ODA2 = ODC_ENABLE;  //Pin 9
+        ODCAbits.ODA0 = ENABLE;  //Pin 2
+        ODCAbits.ODA1 = ENABLE;  //Pin 3
+        ODCBbits.ODB2 = ENABLE;  //Pin 6
+        ODCAbits.ODA2 = ENABLE;  //Pin 9
+
+        //Enable interrupts for the whole board
+        IEC1bits.CNIE = 1;
+        
+        //Put the interrupt flag down
+        IFS1bits.CNIF = 0;  
 
         //Enable pull up resistors for the Inputs
-        IEC1bits.CNIE = 1;
-        IFS1bits.CNIF = 0;
-
-        CNPU2bits.CN30PUE = 1;  //Pin 18
-        CNPU2bits.CN29PUE = 1;  //Pin 21
-        CNPU1bits.CN1PUE = 1;   //Pin 22
-
-        CNEN2bits.CN30IE = 1;   //Pin 18
-        CNEN2bits.CN29IE = 1;   //Pin 21
-        CNEN1bits.CN1IE = 1;    //Pin 22
+        CNPU2bits.CN30PUE = ENABLE;  //Pin 18
+        CNPU2bits.CN29PUE = ENABLE;  //Pin 21
+        CNPU1bits.CN1PUE = ENABLE;   //Pin 22
+        
+        //Enable Interrupts for the inputs
+        CNEN2bits.CN30IE = ENABLE;   //Pin 18
+        CNEN2bits.CN29IE = ENABLE;   //Pin 21
+        CNEN1bits.CN1IE = ENABLE;    //Pin 22
 
 
 }
