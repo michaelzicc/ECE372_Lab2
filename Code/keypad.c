@@ -29,7 +29,7 @@ void initKeypad(void){
         ODCAbits.ODA2 = ENABLE;  //Pin 9
 
         //Enable interrupts for the whole board
-        IEC1bits.CNIE = 1;
+        IEC1bits.CNIE = ENABLE;
         
         //Put the interrupt flag down
         IFS1bits.CNIF = 0;  
