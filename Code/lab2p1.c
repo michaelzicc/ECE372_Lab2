@@ -21,6 +21,8 @@ _CONFIG2( IESO_OFF & SOSCSEL_SOSC & WUTSEL_LEG & FNOSC_PRIPLL & FCKSM_CSDCMD & O
 int main(void)
 {
 
+	initLCD();
+	
     while(1){
         
     }
