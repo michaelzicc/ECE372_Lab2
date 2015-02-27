@@ -18,8 +18,8 @@ void initKeypad(void) {
     TRISBbits.TRISB2 = OUTPUT; //Pin 6
     TRISAbits.TRISA2 = OUTPUT; //Pin 9
 
-    //Set Pins 18,21,22 as Input
-    TRISBbits.TRISB9 = INPUT; //Pin 18
+    //Set Pins 17,21,22 as Input
+    TRISBbits.TRISB8 = INPUT; //Pin 17
     TRISBbits.TRISB10 = INPUT; //Pin 21
     TRISBbits.TRISB11 = INPUT; //Pin 22
 
@@ -36,14 +36,14 @@ void initKeypad(void) {
     IFS1bits.CNIF = 0;
 
     //Enable pull up resistors for the Inputs
-    CNPU2bits.CN30PUE = ENABLE; //Pin 18
-    CNPU2bits.CN29PUE = ENABLE; //Pin 21
-    CNPU1bits.CN1PUE = ENABLE; //Pin 22
+    CNPU2bits.CN22PUE = ENABLE; //Pin 17
+    CNPU2bits.CN16PUE = ENABLE; //Pin 21
+    CNPU1bits.CN11PUE = ENABLE; //Pin 22
 
     //Enable Interrupts for the inputs
-    CNEN2bits.CN30IE = ENABLE; //Pin 18
-    CNEN2bits.CN29IE = ENABLE; //Pin 21
-    CNEN1bits.CN1IE = ENABLE; //Pin 22
+    CNEN2bits.CN22IE = ENABLE; //Pin 18
+    CNEN2bits.CN16IE = ENABLE; //Pin 21
+    CNEN1bits.CN11IE = ENABLE; //Pin 22
 
 
 }
@@ -65,7 +65,7 @@ char scanKeypad(void) {
 
     //turn on row(pin2)
     ODCAbits.ODA0 = ENABLE; //Pin 2
-    if (LATBbits.LATB9 == 0)
+    if (LATBbits.LATB8 == 0)
         key = '1';
     else if (LATBbits.LATB10 == 0)
         key = '3';
@@ -75,7 +75,7 @@ char scanKeypad(void) {
     //turn off row(pin2) turn on row(pin3)
     ODCAbits.ODA0 = DISABLE; //Pin 2
     ODCAbits.ODA1 = ENABLE; //Pin 3
-    if (LATBbits.LATB9 == 0)
+    if (LATBbits.LATB8 == 0)
         key = '*';
     else if (LATBbits.LATB10 == 0)
         key = '#';
@@ -85,7 +85,7 @@ char scanKeypad(void) {
     //turn off row(pin3) turn on row(pin6)
     ODCAbits.ODA1 = DISABLE; //Pin 3
     ODCBbits.ODB2 = ENABLE; //Pin 6
-    if (LATBbits.LATB9 == 0)
+    if (LATBbits.LATB8 == 0)
         key = '7';
     else if (LATBbits.LATB10 == 0)
         key = '9';
@@ -95,7 +95,7 @@ char scanKeypad(void) {
     //turn off row(pin6) turn on row(pin9)
     ODCBbits.ODB2 = DISABLE; //Pin 6
     ODCAbits.ODA2 = ENABLE; //Pin 9
-    if (LATBbits.LATB9 == 0)
+    if (LATBbits.LATB8 == 0)
         key = '4';
     else if (LATBbits.LATB10 == 0)
         key = '6';
@@ -105,16 +105,16 @@ char scanKeypad(void) {
 
     /*
                     Keypad Pins		  PIC Pins
-            1:		3+2				18+2
+            1:		3+2				17+2
             2:		1+2				22+2
             3:		5+2				21+2
-            4:		3+7				18+9
+            4:		3+7				17+9
             5:		1+7				22+9
             6:		5+7				21+9
-            7:		3+6				18+6
+            7:		3+6				17+6
             8:		1+6				22+6
             9:		5+6				21+6
-			*:		3+4				18+3
+			*:		3+4				17+3
             0:		1+4				22+3
             #:		5+4				21+3
      */

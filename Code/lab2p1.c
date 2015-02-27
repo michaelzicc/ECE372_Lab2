@@ -14,7 +14,7 @@
 
 #define DEBOUNCE 15000
 
-#define COLUMN1 PORTBbits.RB9 
+#define COLUMN1 PORTBbits.RB8 
 #define COLUMN2 PORTBbits.RB10
 #define COLUMN3 PORTBbits.RB11
 
