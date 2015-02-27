@@ -51,20 +51,28 @@ int main(void) {
                 break;
             case wait1:
                 curr = wait1;
+				if(next==press_debounce){
+					next=wait1;
+					curr=press_debounce;
+				}
                 break;
             case press_debounce:
                 delayUs(DEBOUNCE);
                 curr = scan;
                 break;
             case scan:
-                a = scanKeypad();
-                curr = wait2;
+				curr = wait2;	//set the state first so if the button is released, it can go straight to release_debounce from the ISR
+            	a = scanKeypad();
                 break;
+			case wait2:
+				curr = wait2;
+				break;
             case release_debounce:
                 delayUs(DEBOUNCE);
                 curr = write_char;
                 break;
             case write_char:
+				curr = wait1;	//set the state first so if a button is pressed, it can go straight to press_debounce from the ISR
                 printCharLCD(a);
                 break;
         }
@@ -76,5 +84,14 @@ int main(void) {
 void _ISR _CNInterrupt(void) { //used to observe change interrupts
     IFS1bits.CNIF = 0; //put the flag down
 
-
+	if(curr == start || curr == wait1)
+		curr=press_debounce;
+	else if(curr == press_debounce)
+		curr=press_debounce;
+	else if(curr == scan || curr == wait2)
+		curr=release_debounce;
+	else if(curr == release_debounce)
+		next=press_debounce;	//don't change curr because we still need to print the character
+	else if(curr == write_char)
+		curr=press_debounce;
 }
