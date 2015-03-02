@@ -6,6 +6,8 @@
 #define INPUT 1
 #define ENABLE 1
 #define DISABLE 0
+#define ENABLE2 0
+#define DISABLE2 1
 
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
@@ -38,12 +40,13 @@ void initKeypad(void) {
     //Enable pull up resistors for the Inputs
     CNPU2bits.CN22PUE = ENABLE; //Pin 17
     CNPU2bits.CN16PUE = ENABLE; //Pin 21
-    CNPU1bits.CN11PUE = ENABLE; //Pin 22
+    CNPU1bits.CN15PUE = ENABLE; //Pin 22
 
     //Enable Interrupts for the inputs
-    CNEN2bits.CN22IE = ENABLE; //Pin 18
+    CNEN2bits.CN22IE = ENABLE; //Pin 17
     CNEN2bits.CN16IE = ENABLE; //Pin 21
-    CNEN1bits.CN11IE = ENABLE; //Pin 22
+    CNEN1bits.CN15IE = ENABLE; //Pin 22
+
 
 
 }
@@ -114,7 +117,7 @@ char scanKeypad(void) {
             7:		3+6				17+6
             8:		1+6				22+6
             9:		5+6				21+6
-			*:		3+4				17+3
+     *:		3+4				17+3
             0:		1+4				22+3
             #:		5+4				21+3
      */

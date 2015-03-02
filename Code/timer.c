@@ -29,7 +29,7 @@ void delayUs(unsigned int delay) { //function used to calculate reasonable delay
     IFS0bits.T2IF = 0; //interrupt flag put down
     T2CONbits.TCKPS = 0; //prescalar value set to 0
     T2CONbits.TON = 1; //timer2 is turned on
-    //while (IFS0bits.T2IF == 0); //remains in the while loop until interrupt flag is raised
+    while (IFS0bits.T2IF == 0); //remains in the while loop until interrupt flag is raised
     T2CONbits.TON = 0; //timer2 is turned off
 
 
