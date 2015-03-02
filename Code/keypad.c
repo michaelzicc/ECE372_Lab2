@@ -31,6 +31,12 @@ void initKeypad(void) {
     ODCBbits.ODB2 = ENABLE; //Pin 6
     ODCAbits.ODA2 = ENABLE; //Pin 9
 
+    // DO WE NEED THIS?
+    //change from analog to digital
+    AD1PCFGbits.PCFG0 = 1;  //Pin 2
+    AD1PCFGbits.PCFG1 = 1;  //Pin 3
+    AD1PCFGbits.PCFG4 = 1;  //Pin 6
+
     //Enable interrupts for the whole board
     IEC1bits.CNIE = ENABLE;
 
@@ -58,51 +64,67 @@ void initKeypad(void) {
  * the key that is pressed.
  */
 char scanKeypad(void) {
-    char key = -1;
+    char key;
 
+    //Disable all rows
+    LATAbits.LATA0 = DISABLE2;
+    LATAbits.LATA1 = DISABLE2;
+    LATBbits.LATB2 = DISABLE2;
+    LATAbits.LATA2 = DISABLE2;
+
+    /*
     //Turn on Open Drain Collection for Outputs
     ODCAbits.ODA0 = DISABLE; //Pin 2
     ODCAbits.ODA1 = DISABLE; //Pin 3
     ODCBbits.ODB2 = DISABLE; //Pin 6
     ODCAbits.ODA2 = DISABLE; //Pin 9
+     */
 
     //turn on row(pin2)
-    ODCAbits.ODA0 = ENABLE; //Pin 2
-    if (LATBbits.LATB8 == 0)
+    //ODCAbits.ODA0 = ENABLE; //Pin 2
+    LATAbits.LATA0 = ENABLE2;
+
+    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
         key = '1';
-    else if (LATBbits.LATB10 == 0)
+    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
         key = '3';
-    else if (LATBbits.LATB11 == 0)
+    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
         key = '2';
 
     //turn off row(pin2) turn on row(pin3)
-    ODCAbits.ODA0 = DISABLE; //Pin 2
-    ODCAbits.ODA1 = ENABLE; //Pin 3
-    if (LATBbits.LATB8 == 0)
+    //ODCAbits.ODA0 = DISABLE; //Pin 2
+    //ODCAbits.ODA1 = ENABLE; //Pin 3
+    LATAbits.LATA0 = DISABLE2;
+    LATAbits.LATA1 = ENABLE2;
+    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
         key = '*';
-    else if (LATBbits.LATB10 == 0)
+    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
         key = '#';
-    else if (LATBbits.LATB11 == 0)
+    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
         key = '0';
 
     //turn off row(pin3) turn on row(pin6)
-    ODCAbits.ODA1 = DISABLE; //Pin 3
-    ODCBbits.ODB2 = ENABLE; //Pin 6
-    if (LATBbits.LATB8 == 0)
+    //ODCAbits.ODA1 = DISABLE; //Pin 3
+    //ODCBbits.ODB2 = ENABLE; //Pin 6
+    LATAbits.LATA1 = DISABLE2;
+    LATBbits.LATB2 = ENABLE2;
+    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
         key = '7';
-    else if (LATBbits.LATB10 == 0)
+    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
         key = '9';
-    else if (LATBbits.LATB11 == 0)
+    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
         key = '8';
 
     //turn off row(pin6) turn on row(pin9)
-    ODCBbits.ODB2 = DISABLE; //Pin 6
-    ODCAbits.ODA2 = ENABLE; //Pin 9
-    if (LATBbits.LATB8 == 0)
+    // ODCBbits.ODB2 = DISABLE; //Pin 6
+    //ODCAbits.ODA2 = ENABLE; //Pin 9
+    LATBbits.LATB2 = DISABLE2; //Pin 6
+    LATAbits.LATA2 = ENABLE2;
+    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
         key = '4';
-    else if (LATBbits.LATB10 == 0)
+    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
         key = '6';
-    else if (LATBbits.LATB11 == 0)
+    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
         key = '5';
 
 
