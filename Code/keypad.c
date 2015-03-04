@@ -134,6 +134,9 @@ char scanKeypad(void) {
 	//Re-Enable interrupts for the whole board
     IEC1bits.CNIE = ENABLE;
 	
+	//Put the interrupt flag down
+    IFS1bits.CNIF = 0;
+	
     /*
                     Keypad Pins		  PIC Pins
             1:		3+2				17+2
