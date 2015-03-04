@@ -6,9 +6,17 @@
 #define INPUT 1
 #define ENABLE 1
 #define DISABLE 0
-#define ENABLE2 0
-#define DISABLE2 1
+#define LOW 0
+#define HIGH 1
+#define DEBOUNCE 15000
+#define DELAY 5000
 
+
+#define COL1 PORTBbits.RB8
+#define COL2 PORTBbits.RB11
+#define COL3 PORTBbits.RB10
+
+#define PRESSED 0
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
  */
@@ -18,7 +26,7 @@ void initKeypad(void) {
     TRISAbits.TRISA0 = OUTPUT; //Pin 2
     TRISAbits.TRISA1 = OUTPUT; //Pin 3
     TRISBbits.TRISB2 = OUTPUT; //Pin 6
-    TRISAbits.TRISA2 = OUTPUT; //Pin 9
+    TRISBbits.TRISB9 = OUTPUT; //Pin 18
 
     //Set Pins 17,21,22 as Input
     TRISBbits.TRISB8 = INPUT; //Pin 17
@@ -29,7 +37,7 @@ void initKeypad(void) {
     ODCAbits.ODA0 = ENABLE; //Pin 2
     ODCAbits.ODA1 = ENABLE; //Pin 3
     ODCBbits.ODB2 = ENABLE; //Pin 6
-    ODCAbits.ODA2 = ENABLE; //Pin 9
+    ODCBbits.ODB9 = ENABLE; //Pin 18
 
     // DO WE NEED THIS?
     //change from analog to digital
@@ -57,6 +65,44 @@ void initKeypad(void) {
 
 }
 
+void enableRow(int num){
+
+    if (num == 0) {//turn off all rows
+        LATAbits.LATA0 = HIGH; //row 1
+        LATAbits.LATA1 = HIGH; //row 4
+        LATBbits.LATB2 = HIGH; //row 3
+        LATBbits.LATB9 = HIGH; //row 2
+    } else if (num == 1) {
+        LATAbits.LATA0 = LOW; //row 1
+        LATAbits.LATA1 = HIGH; //row 4
+        LATBbits.LATB2 = HIGH; //row 3
+        LATBbits.LATB9 = HIGH; //row 2
+    } else if (num == 2) {
+        LATAbits.LATA0 = HIGH; //row 1
+        LATAbits.LATA1 = HIGH; //row 4
+        LATBbits.LATB2 = HIGH; //row 3
+        LATBbits.LATB9 = LOW; //row 2
+    } else if (num == 3) {
+        LATAbits.LATA0 = HIGH; //row 1
+        LATAbits.LATA1 = HIGH; //row 4
+        LATBbits.LATB2 = LOW; //row 3
+        LATBbits.LATB9 = HIGH; //row 2
+    } else if (num == 4) {
+        LATAbits.LATA0 = HIGH; //row 1
+        LATAbits.LATA1 = LOW; //row 4
+        LATBbits.LATB2 = HIGH; //row 3
+        LATBbits.LATB9 = HIGH; //row 2
+    }
+    else if (num == 5) {
+        LATAbits.LATA0 = LOW; //row 1
+        LATAbits.LATA1 = LOW; //row 4
+        LATBbits.LATB2 = LOW; //row 3
+        LATBbits.LATB9 = LOW; //row 2
+    }
+       delayUs(5000);
+    return;
+
+}
 /* This function will be called AFTER you have determined that someone pressed
  * SOME key. This function is to figure out WHICH key has been pressed.
  * This function should return -1 if more than one key is pressed or if
@@ -64,79 +110,66 @@ void initKeypad(void) {
  * the key that is pressed.
  */
 char scanKeypad(void) {
-    char key;
-
+    char key = -1;
+    //int indicator = 0;
 	//Disable interrupts for the whole board while scanning
     IEC1bits.CNIE = DISABLE;
-	
+
     //Disable all rows
-    LATAbits.LATA0 = DISABLE2;
-    LATAbits.LATA1 = DISABLE2;
-    LATBbits.LATB2 = DISABLE2;
-    LATAbits.LATA2 = DISABLE2;
+    enableRow(0);
 
-    /*
-    //Turn on Open Drain Collection for Outputs
-    ODCAbits.ODA0 = DISABLE; //Pin 2
-    ODCAbits.ODA1 = DISABLE; //Pin 3
-    ODCBbits.ODB2 = DISABLE; //Pin 6
-    ODCAbits.ODA2 = DISABLE; //Pin 9
-     */
+    enableRow(1);
 
-    //turn on row(pin2)
-    //ODCAbits.ODA0 = ENABLE; //Pin 2
-    LATAbits.LATA0 = ENABLE2;
-
-    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
+    if(COL1 == LOW){
         key = '1';
-    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
-        key = '3';
-    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
+    }
+    else if (COL2 == LOW){
         key = '2';
+    }
+    else if (COL3 == LOW){
+        key = '3';
+    }
 
-    //turn off row(pin2) turn on row(pin3)
-    //ODCAbits.ODA0 = DISABLE; //Pin 2
-    //ODCAbits.ODA1 = ENABLE; //Pin 3
-    LATAbits.LATA0 = DISABLE2;
-    LATAbits.LATA1 = ENABLE2;
-    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
-        key = '*';
-    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
-        key = '#';
-    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
-        key = '0';
-
-    //turn off row(pin3) turn on row(pin6)
-    //ODCAbits.ODA1 = DISABLE; //Pin 3
-    //ODCBbits.ODB2 = ENABLE; //Pin 6
-    LATAbits.LATA1 = DISABLE2;
-    LATBbits.LATB2 = ENABLE2;
-    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
-        key = '7';
-    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
-        key = '9';
-    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
-        key = '8';
-
-    //turn off row(pin6) turn on row(pin9)
-    // ODCBbits.ODB2 = DISABLE; //Pin 6
-    //ODCAbits.ODA2 = ENABLE; //Pin 9
-    LATBbits.LATB2 = DISABLE2; //Pin 6
-    LATAbits.LATA2 = ENABLE2;
-    if (PORTBbits.RB8 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB11 == 0))
+    enableRow(2);
+    if (COL1 == LOW) {
         key = '4';
-    else if (PORTBbits.RB10 == 0 && !(PORTBbits.RB11 == 0) && !(PORTBbits.RB8 == 0))
-        key = '6';
-    else if (PORTBbits.RB11 == 0 && !(PORTBbits.RB10 == 0) && !(PORTBbits.RB8 == 0))
+    } else if (COL2 == LOW) {
         key = '5';
+    } else if (COL3 == LOW) {
+        key = '6';
+    }
+
+    enableRow(3);
+    if (COL1 == LOW) {
+        key = '7';
+    } else if (COL2 == LOW) {
+        key = '8';
+    } else if (COL3 == LOW) {
+        key = '9';
+    }
+
+    enableRow(4);
+    if (COL1 == LOW) {
+        key = '*';
+    } else if (COL2 == LOW) {
+        key = '0';
+    } else if (COL3 == LOW) {
+        key = '#';
+    }
+
+
+
+    enableRow(5);
+
+
 
 
 	//Re-Enable interrupts for the whole board
     IEC1bits.CNIE = ENABLE;
-	
+
 	//Put the interrupt flag down
     IFS1bits.CNIF = 0;
-	
+
     /*
                     Keypad Pins		  PIC Pins
             1:		3+2				17+2
@@ -155,3 +188,4 @@ char scanKeypad(void) {
 
     return key;
 }
+

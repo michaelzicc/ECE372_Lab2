@@ -17,6 +17,7 @@
 #define COLUMN1 PORTBbits.RB8 
 #define COLUMN2 PORTBbits.RB10
 #define COLUMN3 PORTBbits.RB11
+#define DISABLE 0
 #define ENABLE 1
 
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
@@ -42,6 +43,7 @@ volatile unsigned int FF = 0;
 
 int main(void) {
     char a;
+    int counter = 0;
     initLCD();
     initKeypad();
     while (1) {
@@ -58,16 +60,20 @@ int main(void) {
                 break;
             case press_debounce:
                 delayUs(DEBOUNCE);
-                 curr=wait2;
-                 a=scanKeypad();
+                //curr = wait2;
+               // a = scanKeypad();
+                //if (a == -1)
+                  //  curr = wait1;
                 curr = scan;
                 break;
-            case scan:
+               case scan:
                 curr = wait2; //set the state first so if the button is released, it can go straight to release_debounce from the ISR
                 a = scanKeypad();
+                 if (a == -1)
+                    curr = wait1;
                 break;
             case wait2:
-          //      IFS1bits.CNIF = 0;
+                //      IFS1bits.CNIF = 0;
                 curr = wait2;
                 break;
             case release_debounce:
@@ -76,7 +82,20 @@ int main(void) {
                 break;
             case write_char:
                 curr = wait1; //set the state first so if a button is pressed, it can go straight to press_debounce from the ISR
+                if(a!=-1)
+                {
                 printCharLCD(a);
+                counter = counter +1;
+                if(counter == 9)
+                {
+                    moveCursorLCD(1,0);
+                }
+                else if(counter == 17)
+                {
+                    counter = 0;
+                    moveCursorLCD(0,0);
+                }
+                }
                 break;
         }
     }

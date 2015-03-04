@@ -11,6 +11,7 @@
 
 void initKeypad(void);
 char scanKeypad(void);
+void enableRow(int num);
 
 #endif	/* KEYPAD_H */
 
