@@ -66,6 +66,9 @@ void initKeypad(void) {
 char scanKeypad(void) {
     char key;
 
+	//Disable interrupts for the whole board while scanning
+    IEC1bits.CNIE = DISABLE;
+	
     //Disable all rows
     LATAbits.LATA0 = DISABLE2;
     LATAbits.LATA1 = DISABLE2;
@@ -128,6 +131,9 @@ char scanKeypad(void) {
         key = '5';
 
 
+	//Re-Enable interrupts for the whole board
+    IEC1bits.CNIE = ENABLE;
+	
     /*
                     Keypad Pins		  PIC Pins
             1:		3+2				17+2
