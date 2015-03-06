@@ -2,24 +2,7 @@
 #include "keypad.h"
 #include "timer.h"
 
-<<<<<<< HEAD
-=======
-#define OUTPUT 0
-#define INPUT 1
-#define ENABLE 1
-#define DISABLE 0
-#define LOW 0
-#define HIGH 1
-#define DEBOUNCE 15000
-#define DELAY 5000
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 
-
-#define COL1 PORTBbits.RB8
-#define COL2 PORTBbits.RB11
-#define COL3 PORTBbits.RB10
-
-#define PRESSED 0
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
  */
@@ -68,7 +51,6 @@ void initKeypad(void) {
 
 }
 
-<<<<<<< HEAD
 void setRowLow(int num){
 //num = 0 sets all rows to high
 //num = 1, 2, 3, or 4 sets the corresponding row to low and all other rows to high
@@ -112,43 +94,6 @@ void setRowLow(int num){
             break;
     }
     delayUs(DELAY);
-=======
-void enableRow(int num){
-
-    if (num == 0) {//turn off all rows
-        LATAbits.LATA0 = HIGH; //row 1
-        LATAbits.LATA1 = HIGH; //row 4
-        LATBbits.LATB2 = HIGH; //row 3
-        LATBbits.LATB9 = HIGH; //row 2
-    } else if (num == 1) {
-        LATAbits.LATA0 = LOW; //row 1
-        LATAbits.LATA1 = HIGH; //row 4
-        LATBbits.LATB2 = HIGH; //row 3
-        LATBbits.LATB9 = HIGH; //row 2
-    } else if (num == 2) {
-        LATAbits.LATA0 = HIGH; //row 1
-        LATAbits.LATA1 = HIGH; //row 4
-        LATBbits.LATB2 = HIGH; //row 3
-        LATBbits.LATB9 = LOW; //row 2
-    } else if (num == 3) {
-        LATAbits.LATA0 = HIGH; //row 1
-        LATAbits.LATA1 = HIGH; //row 4
-        LATBbits.LATB2 = LOW; //row 3
-        LATBbits.LATB9 = HIGH; //row 2
-    } else if (num == 4) {
-        LATAbits.LATA0 = HIGH; //row 1
-        LATAbits.LATA1 = LOW; //row 4
-        LATBbits.LATB2 = HIGH; //row 3
-        LATBbits.LATB9 = HIGH; //row 2
-    }
-    else if (num == 5) {
-        LATAbits.LATA0 = LOW; //row 1
-        LATAbits.LATA1 = LOW; //row 4
-        LATBbits.LATB2 = LOW; //row 3
-        LATBbits.LATB9 = LOW; //row 2
-    }
-       delayUs(5000);
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
     return;
 
 }
@@ -160,22 +105,11 @@ void enableRow(int num){
  */
 char scanKeypad(void) {
     char key = -1;
-<<<<<<< HEAD
     
 //Disable interrupts for the whole board while scanning
     CNENABLE = DISABLE;
 
     setRowLow(1);
-=======
-    //int indicator = 0;
-	//Disable interrupts for the whole board while scanning
-    IEC1bits.CNIE = DISABLE;
-
-    //Disable all rows
-    enableRow(0);
-
-    enableRow(1);
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 
     if(COL1 == LOW){
         key = '1';
@@ -187,11 +121,7 @@ char scanKeypad(void) {
         key = '3';
     }
 
-<<<<<<< HEAD
     setRowLow(2);
-=======
-    enableRow(2);
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
     if (COL1 == LOW) {
         key = '4';
     } else if (COL2 == LOW) {
@@ -200,11 +130,7 @@ char scanKeypad(void) {
         key = '6';
     }
 
-<<<<<<< HEAD
     setRowLow(3);
-=======
-    enableRow(3);
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
     if (COL1 == LOW) {
         key = '7';
     } else if (COL2 == LOW) {
@@ -212,7 +138,6 @@ char scanKeypad(void) {
     } else if (COL3 == LOW) {
         key = '9';
     }
-<<<<<<< HEAD
 
     setRowLow(4);
     if (COL1 == LOW) {
@@ -222,53 +147,12 @@ char scanKeypad(void) {
     } else if (COL3 == LOW) {
         key = '#';
     }
-=======
-
-    enableRow(4);
-    if (COL1 == LOW) {
-        key = '*';
-    } else if (COL2 == LOW) {
-        key = '0';
-    } else if (COL3 == LOW) {
-        key = '#';
-    }
-
-
-
-    enableRow(5);
-
-
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 
     setRowLow(5);
 
-<<<<<<< HEAD
     CNENABLE = ENABLE; //Re-Enable interrupts for the whole board
 
     CNFLAG = LOW;//Put the interrupt flag down
-=======
-	//Re-Enable interrupts for the whole board
-    IEC1bits.CNIE = ENABLE;
-
-	//Put the interrupt flag down
-    IFS1bits.CNIF = 0;
-
-    /*
-                    Keypad Pins		  PIC Pins
-            1:		3+2				17+2
-            2:		1+2				22+2
-            3:		5+2				21+2
-            4:		3+7				17+9
-            5:		1+7				22+9
-            6:		5+7				21+9
-            7:		3+6				17+6
-            8:		1+6				22+6
-            9:		5+6				21+6
-     *:		3+4				17+3
-            0:		1+4				22+3
-            #:		5+4				21+3
-     */
->>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 
     return key;
 }
