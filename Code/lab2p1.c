@@ -58,7 +58,7 @@ int main(void) {
                 }
                 break;
 
-            case press_debounce://I put this stuff back in here from the scan state while debugging then couldn't remember how it was originally... but it seems to work anyway
+            case press_debounce: //I put this stuff back in here from the scan state while debugging then couldn't remember how it was originally... but it seems to work anyway
                 delayUs(P_DEBOUNCE);
                 curr = wait2;
                 a = scanKeypad();
