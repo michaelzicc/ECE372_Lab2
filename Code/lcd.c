@@ -75,7 +75,7 @@ void writeLCD(unsigned char word, unsigned int commandType, unsigned int delayAf
  */
 void printCharLCD(char c) {
 
-    writeLCD(c, LCD_WRITE_DATA, 46);
+    writeLCD(c, LCD_WRITE_DATA, 52);
 }
 
 /*Initializes the LCD
@@ -130,15 +130,12 @@ void initLCD(void) {
  * Since a string is just a character array, try to be clever with your use of pointers.
  */
 void printStringLCD(const char* s) {
-    //TODO:
+
     int i = 0;
     while (s[i] != 0) {
         printCharLCD(s[i]); //passing each character into the printChar LCD function.
         i++;
     }
-
-
-
 }
 
 /*
@@ -169,30 +166,8 @@ void moveCursorLCD(unsigned char x, unsigned char y) {
 
     address = address | MOVE_CURSOR; //and we or the address with the command for the Move cursor
 
-    writeLCD(address, LCD_WRITE_CONTROL, 40); //it is then written to th eLCD.
+    writeLCD(address, LCD_WRITE_CONTROL, 44); //it is then written to th eLCD.
 }
 
 //
-
-/*
- * This function is called in lab1p2.c for testing purposes.
- * If everything is working properly, you should get this to look like the video on D2L
- * However, it is suggested that you test more than just this one function.
- */
-void testLCD() {
-    initLCD();
-    int i = 0;
-    printCharLCD('c');
-    for (i = 0; i < 1000; i++) delayUs(1000);
-    clearLCD();
-    printStringLCD("Hello!");
-    moveCursorLCD(1, 2);
-    for (i = 0; i < 1000; i++) delayUs(1000);
-    printStringLCD("Hello!");
-    for (i = 0; i < 1000; i++) delayUs(1000);
-}
-
-
-
-
 
