@@ -1,5 +1,3 @@
-
-
 /*
  * File:   timer.h
  * Author:

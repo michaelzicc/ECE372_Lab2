@@ -1,5 +1,3 @@
-
-
 /*
  * File:   lcd.h
  * Authors:
