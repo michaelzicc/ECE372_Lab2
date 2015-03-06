@@ -13,7 +13,13 @@
 #include <stdio.h>
 
 
+<<<<<<< HEAD
 
+=======
+#define COLUMN1 PORTBbits.RB8 
+#define COLUMN2 PORTBbits.RB10
+#define COLUMN3 PORTBbits.RB11
+>>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 #define DISABLE 0
 #define ENABLE 1
 
@@ -57,9 +63,28 @@ int main(void) {
                     next = wait1;
                 }
                 break;
+<<<<<<< HEAD
 
             case press_debounce://I put this stuff back in here from the scan state while debugging then couldn't remember how it was originally... but it seems to work anyway
                 delayUs(P_DEBOUNCE);
+=======
+            case press_debounce:
+                delayUs(DEBOUNCE);
+                //curr = wait2;
+               // a = scanKeypad();
+                //if (a == -1)
+                  //  curr = wait1;
+                curr = scan;
+                break;
+               case scan:
+                curr = wait2; //set the state first so if the button is released, it can go straight to release_debounce from the ISR
+                a = scanKeypad();
+                 if (a == -1)
+                    curr = wait1;
+                break;
+            case wait2:
+                //      IFS1bits.CNIF = 0;
+>>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
                 curr = wait2;
                 a = scanKeypad();
                 if (a == -1)
@@ -76,13 +101,28 @@ int main(void) {
 
             case write_char:
                 curr = wait1; //set the state first so if a button is pressed, it can go straight to press_debounce from the ISR
+                if(a!=-1)
+                {
                 printCharLCD(a);
+<<<<<<< HEAD
                 counter = counter + 1;
                 if (counter == 8) {
                     moveCursorLCD(1, 0);
                 } else if (counter == 16) {
                     counter = 0;
                     moveCursorLCD(0, 0);
+=======
+                counter = counter +1;
+                if(counter == 9)
+                {
+                    moveCursorLCD(1,0);
+                }
+                else if(counter == 17)
+                {
+                    counter = 0;
+                    moveCursorLCD(0,0);
+                }
+>>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
                 }
                 break;
 

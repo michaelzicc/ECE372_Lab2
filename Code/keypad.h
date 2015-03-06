@@ -35,7 +35,11 @@
 
 void initKeypad(void);
 char scanKeypad(void);
+<<<<<<< HEAD
 void setRowLow(int num);
+=======
+void enableRow(int num);
+>>>>>>> bde5e23853fc0ab5c8cf75ffda4a1416d9d90118
 
 #endif	/* KEYPAD_H */
 
