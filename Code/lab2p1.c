@@ -1,9 +1,11 @@
 // ******************************************************************************************* //
 // File:         lab2p1.c
-// Date:         
-// Authors:      
+// Date:         Wednesday, March 11, 2015
+// Authors:      Michael Ziccarelli, Noel Hagos Teku, Kevin T Gilliam, 
+//					Devin John Slack, Reydesel Alejandro Cuevas
 //
-// Description: 
+// Description:  Program that displays keypad presses on an LCD
+//
 // ******************************************************************************************* //
 
 #include "p24fj64ga002.h"
@@ -16,6 +18,9 @@
 
 #define DISABLE 0
 #define ENABLE 1
+#define MAX_SECOND_ROW 16
+#define MAX_FIRST_ROW 8
+#define RESET 0
 
 
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
@@ -34,14 +39,10 @@ volatile state curr = start; //curr is used to change into different states
 volatile state prev = start; // prev keeps track of the current state if we need to go back.
 volatile state next = start; //next keeps track of which state curr will be next
 
-//variables used to keep track of time
-volatile unsigned int minutes = 0;
-volatile unsigned int seconds = 0;
-volatile unsigned int FF = 0;
 
 int main(void) {
     char a;
-    int counter = 0;
+    int counter = RESET;
     initLCD();
     initKeypad();
 
@@ -78,11 +79,11 @@ int main(void) {
                 curr = wait1; //set the state first so if a button is pressed, it can go straight to press_debounce from the ISR
                 printCharLCD(a);
                 counter = counter + 1;
-                if (counter == 8) {
-                    moveCursorLCD(1, 0);
-                } else if (counter == 16) {
-                    counter = 0;
-                    moveCursorLCD(0, 0);
+                if (counter == MAX_FIRST_ROW) {	//if courser reached the end of the first row
+                    moveCursorLCD(1, 0);	//move the cursor to the beginning of the second row
+                } else if (counter == MAX_SECOND_ROW) {	//if cursor reached the end of the second row
+                    counter = RESET;	//reset cursor position counter
+                    moveCursorLCD(0, 0);	//move the cursor back to the beginning of the first row
                 }
                 break;
 

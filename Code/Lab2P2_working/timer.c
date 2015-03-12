@@ -5,12 +5,14 @@
 
 volatile unsigned int T = 0;
 
+//Timer interrupt; reset the flag
 void _ISR _T2Interrupt() {
 
     TIMER2FLAG = LOW; //Lower the flag
 
 }
 
+//Timer interrupt; reset the flag
 void _ISR _T1Interrupt() {
 
     TIMER1FLAG = 0; //Lower the flag
@@ -19,6 +21,7 @@ void _ISR _T1Interrupt() {
 
 }
 
+ //initializes Timer 1 :turning it on, setting its prescalar and interrupt flag,
 void initTimer1() {
     // This is so that we do not have to calculate PR by hand.
     unsigned int prVal = (FCY * .025) / 256.0 - 1;
@@ -31,7 +34,8 @@ void initTimer1() {
 
 }
 
-void initTimer2() { //initializes Timer 2 :turning it on, setting its prescalar and interrupt flag,
+ //initializes Timer 2 :turning it on, setting its prescalar and interrupt flag,
+void initTimer2() {
     //setting its PR value, and setting counter to 0.
     T2CONbits.TCKPS = 0; //timer2's prescalar is set to 0
     TIMER2FLAG = LOW; //interrupt flag put down
@@ -40,6 +44,7 @@ void initTimer2() { //initializes Timer 2 :turning it on, setting its prescalar 
     PR2 = ONE_MICROSECOND;
 }
 
+//TODO: COMMENT THIS
 void delayMili(unsigned int delay) {
     T = 0;
 
@@ -52,7 +57,8 @@ void delayMili(unsigned int delay) {
 
 }
 
-void delayUs(unsigned int delay) { //function used to calculate reasonable delay in microseconds
+//function used to calculate reasonable delay in microseconds
+void delayUs(unsigned int delay) { 
     unsigned int elapsed = 0;
 
     TIMER2ONOFF = ON; //timer2 is turned on

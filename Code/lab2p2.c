@@ -1,6 +1,6 @@
 // ******************************************************************************************* //
 // File:         lab2p1.c
-// Date:         
+// Date:         DO NOT USE THIS FILE
 // Authors:      
 //
 // Description: 
@@ -35,10 +35,6 @@ volatile state curr = start; //curr is used to change into different states
 volatile state prev = start; // prev keeps track of the current state if we need to go back.
 volatile state next = start; //next keeps track of which state curr will be next
 
-//variables used to keep track of time
-volatile unsigned int minutes = 0;
-volatile unsigned int seconds = 0;
-volatile unsigned int FF = 0;
 
 
 

@@ -1,9 +1,11 @@
 // ******************************************************************************************* //
 // File:         lab2p1.c
-// Date:
-// Authors:
+// Date:         Wednesday, March 11, 2015
+// Authors:      Michael Ziccarelli, Noel Hagos Teku, Kevin T Gilliam, 
+//					Devin John Slack, Reydesel Alejandro Cuevas
 //
-// Description:
+// Description:  4-character-password program for LCD and keypad
+//
 // ******************************************************************************************* //
 
 #include "p24FJ64GA002.h"
@@ -13,6 +15,12 @@
 #include "keypad.h"
 #include <stdio.h>
 #include <string.h>
+
+#define PASSWORD_LENGTH 5	//5 because of the null character; the password must be 4 characters.
+#define REAL_PW_LENGTH 4	//the password can only be 4 characters
+#define TIME_DELAY1 3
+#define TIME_DELAY2 5
+#define TIME_DELAY3 15
 
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & COE_OFF & ICS_PGx1 &
         FWDTEN_OFF & WINDIS_OFF & FWPSA_PR128 & WDTPS_PS32768)
@@ -39,7 +47,7 @@ void _ISR _CNInterrupt(void) {
 int main(void) {
 
     char key = -1;
-    char lastFourKeys[5] = "";
+    char lastFourKeys[PASSWORD_LENGTH] = "";
 
     int i = 0;
 
@@ -49,7 +57,7 @@ int main(void) {
     initTimer1();
 
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < REAL_PW_LENGTH; i++) {
         strcpy(passwords[i], "");
     }
 
@@ -58,7 +66,7 @@ int main(void) {
 
 
             case Start:
-                delayMili(5);
+                delayMili(TIME_DELAY2);
                 nextState = Enter;
                 break;
 
@@ -76,11 +84,11 @@ int main(void) {
 
             case validPW:
                 CNENABLE = DISABLE;
-                delayMili(3);
+                delayMili(TIME_DELAY1);
                 clearLCD();
                 moveCursorLCD(0, 0);
                 printStringLCD("Good    ");
-                delayMili(15);
+                delayMili(TIME_DELAY3);
                 moveCursorLCD(1, 0);
                 strcpy(lastFourKeys, "");
                 nextState = Enter;
@@ -88,11 +96,11 @@ int main(void) {
 
             case invalidPW:
                 CNENABLE = DISABLE;
-                delayMili(3);
+                delayMili(TIME_DELAY1);
                 clearLCD();
                 moveCursorLCD(0, 0);
                 printStringLCD("Bad     ");
-                delayMili(15);
+                delayMili(TIME_DELAY3);
                 moveCursorLCD(1, 0);
                 strcpy(lastFourKeys, "");
                 nextState = Enter;
@@ -107,7 +115,7 @@ int main(void) {
                 clearLCD();
                 moveCursorLCD(0, 0);
                 printStringLCD("Valid ");
-                delayMili(15);
+                delayMili(TIME_DELAY3);
                 nextState = Enter;
                 break;
 
@@ -118,7 +126,7 @@ int main(void) {
                 strcpy(lastFourKeys, "");
                 moveCursorLCD(0, 0);
                 printStringLCD("Invalid ");
-                delayMili(15);
+                delayMili(TIME_DELAY3);
                 nextState = Enter;
                 break;
 
@@ -162,84 +170,3 @@ int main(void) {
     return 0;
 }
 
-void updateInputString(char key, char* string) {
-//Adds key to the end of string, up to four characters long
-    unsigned int i = 0;
-
-    if (key != -1) {
-        for (i = 0; i < 5; i++) {
-            if (string[i] == '\0') {
-                string[i] = key;
-                string[i + 1] = '\0';
-                i = 5;
-            }
-        }
-    }
-    return;
-}
-
-state analyzeInput(char* string) {
-/*Every time a keypress returns a char succesfully, 
- * the resulting string of inputs is analyzed for invalid characters,
- * as well as detecting '**' which means the user wants to store a new password
- */
-
-    CNENABLE = DISABLE;
-    if (string[0] == '#') return invalidEntry;
-
-    if (setPW == FALSE) {//Device is in "Enter" mode
-
-        if (string[0] == '*' && string[1] == '*') {//Check for setmode
-            delayMili(3);
-            strcpy(string, "");
-            clearLCD();
-            return setMode;
-        }
-        if (strchr(string, '#') != NULL) {//check for invalid character '#'
-            return invalidEntry;
-        } else return comparePasswords(string);
-
-    } else {//Device is in "Set Mode"
-        //check for invalid character '#' or '*':
-        if (strrchr(string, '#') != NULL || strrchr(string, '*') != NULL) return invalidEntry;
- //if the string is four chars long and all are valid, then the entry is complete and valid
-        if (strlen(string) == 4) {
-            delayMili(2);
-            return validEntry;
-        }
-        //entry is still valid but is not long enough to store as a password.
-        return setMode;
-    }
-}
-
-state comparePasswords(char* string) {
-/*This function is used if an entry isn't thrown out for being invalid.
- * The new entry  must be compared to existing passwords
- */
-    CNENABLE = DISABLE;
-    int i = 0;
-
-    if (strlen(string) != 4) return Enter;
-
-    if (strlen(string) == 4) {//If the entry is the right length
-
-        if (passwordCount > 0) {//if there are existing passwords to compare to
-            for (i = 0; i < 4; i++) {
-                if (strcmp(passwords[i], string) == 0) {//compare using strcmp()
-
-                    return validPW;
-                }
-            }
-        }
-        //Entry isn't good or bad or invalid, but there are no stored passwords to compare to
-        else {
-            delayMili(10);
-            strcpy(string, "");
-            clearLCD();
-            return Enter;
-        }
-    }
-
-    return invalidPW;//if none of the above apply then the entry was valid yet not a match
-
-}

@@ -25,6 +25,7 @@
 void initTimer2(); 
 void initTimer1();
 void delayUs(unsigned int delay);
+void delayMili(unsigned int delay);
 
 #endif	/* INITTIMER_H */
 

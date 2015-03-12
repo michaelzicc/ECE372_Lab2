@@ -27,9 +27,9 @@ void initKeypad(void) {
 
     // DO WE NEED THIS?
     //change from analog to digital
-    AD1PCFGbits.PCFG0 = 1;  //Pin 2
-    AD1PCFGbits.PCFG1 = 1;  //Pin 3
-    AD1PCFGbits.PCFG4 = 1;  //Pin 6
+    AD1PCFGbits.PCFG0 = ENABLE;  //Pin 2
+    AD1PCFGbits.PCFG1 = ENABLE;  //Pin 3
+    AD1PCFGbits.PCFG4 = ENABLE;  //Pin 6
 
     //Enable interrupts for the whole board
     IEC1bits.CNIE = ENABLE;
@@ -51,6 +51,8 @@ void initKeypad(void) {
 
 }
 
+
+//Used for scanning the keypad, turning on individual rows
 void setRowLow(int num){
 //num = 0 sets all rows to high
 //num = 1, 2, 3, or 4 sets the corresponding row to low and all other rows to high
