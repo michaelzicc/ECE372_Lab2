@@ -49,6 +49,7 @@ void initKeypad(void) {
 
 
 //Used for scanning the keypad, turning on individual rows
+
 void setRowLow(int num) {
     //INSTRUCTIONS:
     //num = 0 sets all rows to high

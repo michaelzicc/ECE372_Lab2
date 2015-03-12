@@ -2,7 +2,6 @@
 #include "keypad.h"
 #include "timer.h"
 
-
 /* Initialize the rows as ODC outputs and the columns as inputs with pull-up
  * resistors. Don't forget about other considerations...
  */
@@ -27,9 +26,9 @@ void initKeypad(void) {
 
     // DO WE NEED THIS?
     //change from analog to digital
-    AD1PCFGbits.PCFG0 = ENABLE;  //Pin 2
-    AD1PCFGbits.PCFG1 = ENABLE;  //Pin 3
-    AD1PCFGbits.PCFG4 = ENABLE;  //Pin 6
+    AD1PCFGbits.PCFG0 = ENABLE; //Pin 2
+    AD1PCFGbits.PCFG1 = ENABLE; //Pin 3
+    AD1PCFGbits.PCFG4 = ENABLE; //Pin 6
 
     //Enable interrupts for the whole board
     IEC1bits.CNIE = ENABLE;
@@ -53,11 +52,12 @@ void initKeypad(void) {
 
 
 //Used for scanning the keypad, turning on individual rows
-void setRowLow(int num){
-//num = 0 sets all rows to high
-//num = 1, 2, 3, or 4 sets the corresponding row to low and all other rows to high
-//num = 5 sets all rows to low
-    switch(num) {
+
+void setRowLow(int num) {
+    //num = 0 sets all rows to high
+    //num = 1, 2, 3, or 4 sets the corresponding row to low and all other rows to high
+    //num = 5 sets all rows to low
+    switch (num) {
         case 0://turn off all rows
             ROW1 = HIGH; //row 1
             ROW4 = HIGH; //row 4
@@ -99,6 +99,7 @@ void setRowLow(int num){
     return;
 
 }
+
 /* This function will be called AFTER you have determined that someone pressed
  * SOME key. This function is to figure out WHICH key has been pressed.
  * This function should return -1 if more than one key is pressed or if
@@ -107,19 +108,17 @@ void setRowLow(int num){
  */
 char scanKeypad(void) {
     char key = -1;
-    
-//Disable interrupts for the whole board while scanning
+
+    //Disable interrupts for the whole board while scanning
     CNENABLE = DISABLE;
 
     setRowLow(1);
 
-    if(COL1 == LOW){
+    if (COL1 == LOW) {
         key = '1';
-    }
-    else if (COL2 == LOW){
+    } else if (COL2 == LOW) {
         key = '2';
-    }
-    else if (COL3 == LOW){
+    } else if (COL3 == LOW) {
         key = '3';
     }
 
@@ -154,7 +153,7 @@ char scanKeypad(void) {
 
     CNENABLE = ENABLE; //Re-Enable interrupts for the whole board
 
-    CNFLAG = LOW;//Put the interrupt flag down
+    CNFLAG = LOW; //Put the interrupt flag down
 
     return key;
 }

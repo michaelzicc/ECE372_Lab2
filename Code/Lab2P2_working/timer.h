@@ -22,7 +22,7 @@
 #define DISABLE 0
 #define CNENABLE IEC1bits.CNIE
 
-void initTimer2(); 
+void initTimer2();
 void initTimer1();
 void delayUs(unsigned int delay);
 void delayMili(unsigned int delay);

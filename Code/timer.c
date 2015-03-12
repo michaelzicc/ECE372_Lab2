@@ -14,16 +14,17 @@
 #define RESET 0
 
 //Timer interrupt; lower the flag
-void _ISR _T2Interrupt(){
 
-    TIMER2FLAG = LOW;//Lower the flag
+void _ISR _T2Interrupt() {
+
+    TIMER2FLAG = LOW; //Lower the flag
 
 }
 
 //initializes Timer 2 :turning it on, setting its prescalar and interrupt flag,
 //setting its PR value, and setting counter to 0. 
 
-void initTimer2() { 
+void initTimer2() {
     T2CONbits.TCKPS = PRESCALER256; //timer2's prescalar is set to 256
     TIMER2FLAG = LOW; //interrupt flag put down
     TIMER2ONOFF = OFF; //timer2 is turned off
@@ -33,7 +34,7 @@ void initTimer2() {
 
 //function used to calculate reasonable delay in microseconds
 
-void delayUs(unsigned int delay) { 
+void delayUs(unsigned int delay) {
     unsigned int elapsed = 0;
 
     TIMER2ONOFF = ON; //timer2 is turned on
@@ -43,7 +44,7 @@ void delayUs(unsigned int delay) {
         while (TIMER2FLAG == LOW); //remains in the while loop until interrupt flag is raised
         elapsed++;
     }
-    
+
     TIMER2ONOFF = OFF; //timer2 is turned off
 
 }

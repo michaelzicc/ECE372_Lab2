@@ -9,7 +9,6 @@
 #include "lcd.h"
 #include "timer.h"
 
-
 /* This function should take in a two-byte word and writes either the lower or upper
  * byte to the last four bits of LATB. Additionally, according to the LCD data sheet
  * It should set LCD_RS and LCD_E with the appropriate values and delays.
@@ -71,7 +70,7 @@ void initLCD(void) {
     // WriteLCD function. Additionally, the specific sequence and timing is very important.
 
     // Enable 4-bit interface
-    writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 4100, LOWER); 
+    writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 4100, LOWER);
 
     writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 100, LOWER);
 

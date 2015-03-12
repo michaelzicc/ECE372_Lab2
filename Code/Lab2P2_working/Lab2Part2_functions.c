@@ -11,6 +11,7 @@
 
 
 //Adds key to the end of string, up to four characters long
+
 void updateInputString(char key, char* string) {
 
     unsigned int i = 0;
@@ -26,7 +27,6 @@ void updateInputString(char key, char* string) {
     }
     return;
 }
-
 
 /*Every time a keypress returns a char succesfully, 
  * the resulting string of inputs is analyzed for invalid characters,
@@ -53,7 +53,7 @@ state analyzeInput(char* string) {
     } else {//Device is in "Set Mode"
         //check for invalid character '#' or '*':
         if (strrchr(string, '#') != NULL || strrchr(string, '*') != NULL) return invalidEntry;
- //if the string is four chars long and all are valid, then the entry is complete and valid
+        //if the string is four chars long and all are valid, then the entry is complete and valid
         if (strlen(string) == REAL_PW_LENGTH) {
             delayMili(2);
             return validEntry;
@@ -62,7 +62,6 @@ state analyzeInput(char* string) {
         return setMode;
     }
 }
-
 
 /*This function is used if an entry isn't thrown out for being invalid.
  * The new entry  must be compared to existing passwords
@@ -83,8 +82,7 @@ state comparePasswords(char* string) {
                     return validPW;
                 }
             }
-        }
-        //Entry isn't good or bad or invalid, but there are no stored passwords to compare to
+        }            //Entry isn't good or bad or invalid, but there are no stored passwords to compare to
         else {
             delayMili(10);
             strcpy(string, "");
@@ -93,6 +91,6 @@ state comparePasswords(char* string) {
         }
     }
 
-    return invalidPW;//if none of the above apply then the entry was valid yet not a match
+    return invalidPW; //if none of the above apply then the entry was valid yet not a match
 
 }

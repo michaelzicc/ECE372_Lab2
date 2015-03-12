@@ -97,7 +97,7 @@ void initLCD(void) {
     // WriteLCD function. Additionally, the specific sequence and timing is very important.
 
     // Enable 4-bit interface
-    writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 4100, LOWER); 
+    writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 4100, LOWER);
 
     writeFourBits(INIT_MESSAGE, LCD_WRITE_CONTROL, 100, LOWER);
 

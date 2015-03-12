@@ -17,6 +17,7 @@
 #define NUMPASSWORDS 4
 
 //Define the states used for Part 2
+
 typedef enum {
     Start, Enter, waitForRelease, keyPress, keyRelease,
     validPW, invalidPW, validEntry, invalidEntry, setMode
